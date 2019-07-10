@@ -1,0 +1,463 @@
+{
+  "languages": {
+    "unknown": -1,
+    "java": 1,
+    "javascript": 2,
+    "js": 2,
+    "python": 3,
+    "ruby": 4,
+    "ruby on rails": 4,
+    "c": 5,
+    "c++": 5,
+    "c/c++": 5,
+    "lisp": 6,
+    "kotlin": 7,
+    "(asp) .net": 8,
+    "asp / asp.net": 8,
+    "c#": 9,
+    "haskell": 10,
+    "go": 11,
+    "php": 12,
+    "rust": 13,
+    "matlab": 14,
+    "r": 14,
+    "matlab/r": 14,
+    "swift": 15,
+    "typescript": 16,
+    "dart": 17,
+    "ABAP": 18,
+    "actionscript": 19,
+    "ada": 20,
+    "algol": 21,
+    "alice": 22,
+    "apl": 23,
+    "assembly language": 24,
+    "assembly": 24,
+    "awk": 25,
+    "bbc basic": 26,
+    "cobol": 27,
+    "cascading style sheets": 28,
+    "css": 28,
+    "sass": 28,
+    "d": 29,
+    "delphi": 30,
+    "erlang": 31,
+    "f#": 32,
+    "forth": 33,
+    "fortran": 34,
+    "html": 35,
+    "idl": 36,
+    "intercal": 37,
+    "labview": 38,
+    "logo": 39,
+    "ml": 40,
+    "modula-3": 41,
+    "nxt-g": 42,
+    "objective-c": 43,
+    "ocaml": 44,
+    "pascal": 45,
+    "perl": 46,
+    "postscript": 47,
+    "prolog": 48,
+    "s-plus": 49,
+    "scala": 50,
+    "sgml": 51,
+    "simula": 52,
+    "smalltalk": 53,
+    "smil": 54,
+    "snobol": 55,
+    "sql": 56,
+    "ssi": 57,
+    "stata": 58,
+    "tcl/tk": 59,
+    "tex": 60,
+    "latex": 60,
+    "verilog": 61,
+    "vhdl": 62,
+    "visual basic": 63,
+    "vb": 63,
+    "vrml": 64,
+    "wap/wml": 65,
+    "xml": 66,
+    "xsl": 67
+  },
+  "continuous_integration": {
+    "gitlab": 1,
+    "jarvis": 2,
+    "heroku": 3,
+    "netlify": 4,
+    "github": 5,
+    "code pipeline": 6,
+    "teamcity": 7,
+    "circle ci": 8,
+    "jenkins": 9,
+    "azure": 10,
+    "bamboo": 11,
+    "bitbucket": 12
+  },
+  "design_skills": {
+        "Branding": {
+            "id": 1,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Communication": {
+            "id": 2,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Interactive Media": {
+            "id": 3,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Graphic Design": {
+            "id": 4,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Web Design": {
+            "id": 5,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Accessibility": {
+            "id": 6,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Mobile Design (Android/iOS)": {
+            "id": 7,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Responsive Design": {
+            "id": 8,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Data Visualization": {
+            "id": 9,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "Design Software (e.g., Adobe Suite": {
+      "id": 10,
+      "language": -1,
+      "classification": "frontend"
+    },
+    "General Frontend": {
+      "id":-1,
+      "language": -1,
+      "classification": "frontend"
+    }
+  },
+  "frameworks": {
+    "react": {
+      "id": 1,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "node": {
+      "id": 2,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "angular": {
+      "id": 3,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "vue": {
+      "id": 4,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "wordpress": {
+      "id": 5,
+      "language": 12,
+      "classification": "backend"
+    },
+    "ruby on rails": {
+      "id": 6,
+      "language": 4,
+      "classification": "backend"
+    },
+    "laravel": {
+      "id": 7,
+      "language": 12,
+      "classification": "backend"
+    },
+    "asp.net": {
+      "id": 8,
+      "language": 8,
+      "classification": "backend"
+    },
+    "django": {
+      "id": 9,
+      "language": 3,
+      "classification": "backend"
+    },
+    "uikit": {
+      "id": 10,
+      "language": 2,
+      "classification": "backend"
+    },
+    "flask": {
+      "id": 11,
+      "language": 3,
+      "classification": "backend"
+    },
+    "bootstrap": {
+      "id": 12,
+      "language": 2,
+      "classification": "frontend"
+    },
+    ".net core": {
+      "id": 13,
+      "language": 8,
+      "classification": "backend"
+    },
+    "svelte": {
+      "id": 14,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "xamarin.forms": {
+      "id": 15,
+      "language": 8,
+      "classification": "frontend"
+    },
+    ".net": {
+      "id": 16,
+      "language": 8,
+      "classification": "backend"
+    },
+    "springboot": {
+      "id": 17,
+      "language": 1,
+      "classification": "backend"
+    },
+    "symfony": {
+      "id": 18,
+      "language": 12,
+      "classification": "backend"
+    },
+    "drupal": {
+      "id": 19,
+      "language": 12,
+      "classification": "backend"
+    },
+    "networkx": {
+      "id": 20,
+      "language": 56,
+      "classification": "backend"
+    },
+    "neo4j": {
+      "id": 21,
+      "language": 56,
+      "classification": "backend"
+    },
+    "backbone": {
+      "id": 22,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "cappuccino": {
+      "id": 23,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "chaplin": {
+      "id": 24,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "echo": {
+      "id": 25,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "ember": {
+      "id": 26,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "enyo": {
+      "id": 27,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "express": {
+      "id": 28,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "ext": {
+      "id": 29,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "google web toolkit": {
+      "id": 30,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "javascriptmvc": {
+      "id": 31,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "jsrender": {
+      "id": 32,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "jsviews": {
+      "id": 33,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "knockout": {
+      "id": 34,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "meteor": {
+      "id": 35,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "mojito": {
+      "id": 36,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "mootools": {
+      "id": 37,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "openui5": {
+      "id": 39,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "polymer": {
+      "id": 40,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "prototype": {
+      "id": 41,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "puremvc": {
+      "id": 42,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "qooxdoo": {
+      "id": 43,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "rialto": {
+      "id": 44,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "sproutcore": {
+      "id": 45,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "gatsby": {
+      "id": 47,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "jquery": {
+      "id": 48,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "marko": {
+      "id": 49,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "mithril": {
+      "id": 50,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "todomvc": {
+      "id": 51,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "matreshka": {
+      "id": 52,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "framework": {
+      "id": 53,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "nuclear": {
+      "id": 54,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "dojo": {
+      "id": 55,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "riot": {
+      "id": 56,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "material": {
+      "id": 57,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "lit-element": {
+      "id": 58,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "aurelia": {
+      "id": 59,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "vanilla": {
+      "id": 60,
+      "language": 2,
+      "classification": "frontend"
+    },
+    "General Backend": {
+      "id": -2,
+      "language": -1,
+      "classification": "backend"
+    }
+  },
+  "framework_synonyms": {
+    "angularjs": "angular",
+    "prototype javascript framework": "prototype",
+    "vue.js": "vue",
+    "vuejs": "vue",
+    "ext js": "ext",
+    "nodejs": "node",
+    "node.js": "node",
+    "nuclear-js": "nuclear",
+    "bootstrapjs": "bootstrap"
+  }
+}
