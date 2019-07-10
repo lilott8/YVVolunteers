@@ -12,6 +12,7 @@ main.py
 ### Required Flags:
  - `-i`/`--input`
 
+
 ##Description of Flags:
 
 | Short             | Long              | Argument                                          | Purpose                               |
@@ -27,6 +28,7 @@ main.py
 
 
 ##Caveats
+
 `-pbt` is not currently implemented.  Thus, to add new team members, this either must be run again or groups should be handled throug hand curation.
 
 The organization of the output isn't too great.  For instance using `framework` or `language` it builds the teams accordingly, but gives not indication which group is proficient in which language or framework.
