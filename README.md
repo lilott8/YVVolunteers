@@ -13,7 +13,7 @@ main.py
  - `-i`/`--input`
 
 
-##Description of Flags:
+## Description of Flags:
 
 | Short             | Long              | Argument                                          | Purpose                               |
 | ------------------|-------------------|---------------------------------------------------|---------------------------------------|
@@ -27,7 +27,7 @@ main.py
 | -pbt              | --teams           | [path/to/json/of/teams]                           | Path to prebuilt teams                |                                           
 
 
-##Caveats
+## Caveats
 
 `-pbt` is not currently implemented.  Thus, to add new team members, this either must be run again or groups should be handled throug hand curation.
 
