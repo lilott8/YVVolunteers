@@ -52,6 +52,7 @@ class Heuristic(metaclass=abc.ABCMeta):
         self.log = logging.getLogger(self.__class__.__name__)
         self.size = size
         self.heuristic = heuristic
+        self.administrative = dict()
         self.groups = dict()
         self.leaders = list()
         self.log.info("Using " + self.heuristic.name)
@@ -68,14 +69,21 @@ class Heuristic(metaclass=abc.ABCMeta):
 
         # Build the groups required for assignment.
         for x in range(0, math.ceil(len(members)/self.size)+1):
-            self.groups[x] = list()
+            self.groups[x] = {'members': list(), 'leader': None, 'expertise': set()}
 
     @abc.abstractmethod
     def build_groups(self, members: List[Member]) -> str:
         pass
 
+    @staticmethod
+    def set_default(obj):
+        if isinstance(obj, set):
+            return list(obj)
+        raise TypeError
+
     def to_json(self) -> str:
-        return json.dumps({"groups": self.groups, "leaders": self.leaders}, indent=4, sort_keys=True)
+        return json.dumps({"groups": self.groups, "leaders": self.leaders,
+                           'admin': self.administrative}, indent=4, sort_keys=True, default=Heuristic.set_default)
 
 
 class NaiveHeuristic(Heuristic):
@@ -124,12 +132,13 @@ class LanguageHeuristic(Heuristic):
         assigned = set()
         for k, v in self.buckets.items():
             for m in v:
-                if len(self.groups[x]) < self.size:
-                    if m not in assigned:
-                        self.groups[x].append(m.email)
+                if len(self.groups[x]['members']) < self.size:
+                    if m not in assigned and k in m.ranking['languages']:
+                        self.groups[x]['members'].append(m.email)
                         assigned.add(m)
                 else:
                     x += 1
+                self.groups[x]['expertise'].add(k.name)
         return self.to_json()
 
 
@@ -156,12 +165,13 @@ class FrameworkHeuristic(Heuristic):
         x = 0
         for k, v in self.buckets.items():
             for m in v:
-                if len(self.groups[x]) < self.size:
-                    if m not in assigned:
-                        self.groups[x].append(m.email)
+                if len(self.groups[x]['members']) < self.size:
+                    if m not in assigned and k in m.ranking['frameworks']:
+                        self.groups[x]['members'].append(m.email)
                         assigned.add(m)
                 else:
                     x += 1
+                self.groups[x]['expertise'].add(k)
         return self.to_json()
 
 
@@ -184,7 +194,6 @@ class ExperienceHeuristic(Heuristic):
         backward = len(sorted_members)-1
         x = 0
         y = 0
-        self.log.info(len(self.groups))
         while forward != backward and x < len(self.groups):
             if len(self.groups[x]) < self.size:
                 self.groups[x].append(sorted_members[forward].email)
@@ -194,8 +203,6 @@ class ExperienceHeuristic(Heuristic):
             else:
                 x += 1
             y += 1
-        self.log.info(y)
-        self.log.info(x)
 
         return self.to_json()
 

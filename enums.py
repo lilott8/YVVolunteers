@@ -122,7 +122,7 @@ class ProgrammingLanguages(IntEnum):
     VRML = 64
     WAP_WML = 65
     XML = 66
-    XSL = 6
+    XSL = 67
 
 
 class ContinuousIntegration(IntEnum):

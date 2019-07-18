@@ -1,7 +1,7 @@
 import cli
 import csv
 import logging
-from member import Member, Designer, Developer, Leader, RoleEnums
+from member import Member, Designer, Developer, Leader
 from typing import Dict, List, Set
 from enums import ProgrammingLanguages as PL
 from enums import ContinuousIntegration as CI
@@ -19,12 +19,13 @@ class Volunteers(object):
         This parses the input file and builds the members and their roles.
         :return: List of users
         """
-        self.log.info(self.config.input_file)
         members = list()
         with open(self.config.input_file, 'r') as csv_file:
             reader = csv.DictReader(csv_file, delimiter=',')
             uid = 1
             for row in reader:
+                if row['Username'] == 'Iyasu.shinsei@gmail.com':
+                    x = 1
                 roles = set()
                 rids = 0
                 frameworks = set()
@@ -69,20 +70,14 @@ class Volunteers(object):
         for f in re.split(' |,|;', js_fw.lower()):
             if f in self.config.taxonomy['frameworks']:
                 js.add(f)
-                # js[f] = self.config.taxonomy['frameworks'][f]
             elif f in self.config.taxonomy['framework_synonyms']:
                 js.add(f)
-                # js[self.config.taxonomy['framework_synonyms'][f]] = \
-                #     self.config.taxonomy['frameworks'][self.config.taxonomy['framework_synonyms'][f]]
             else:
                 for s in f.split('.'):
                     if s in self.config.taxonomy['frameworks']:
                         js.add(s)
-                        # js[s] = self.config.taxonomy['frameworks'][s]
                     elif s in self.config.taxonomy['framework_synonyms']:
                         js.add(s)
-                        # js[self.config.taxonomy['framework_synonyms'][s]] = \
-                        #     self.config.taxonomy['frameworks'][self.config.taxonomy['framework_synonyms'][s]]
                     else:
                         js.add("General Backend")
         return js
@@ -171,7 +166,6 @@ class Volunteers(object):
         js_framework_proficiency = self.parse_frameworks(row["The framework I would say I'm most confident in is"])
         skills.update(js_framework_proficiency)
         experience = Volunteers.parse_experience(row["I've been a designer for"])
-        # ranking = Member.build_ranking(self.config.taxonomy, frameworks=js_framework_proficiency, languages=skills)
         return Designer(confidence=confidence, js_proficiency=js_framework_proficiency_rating, design_skills=skills,
                         frameworks=js_framework_proficiency, experience=experience)
 
@@ -209,8 +203,6 @@ class Volunteers(object):
         dbms_experience = row["I have experience with Database Management Systems (DBMS)"]
         data_analytics_experience = row["I have experience in data analytics"]
         skills = programming_proficiencies.union(framework_proficiencies)
-        # ranking = Member.build_ranking(self.config.taxonomy, frameworks=framework_proficiencies,
-        #                                languages=programming_proficiencies)
         return Developer(backend_confidence=backend_confidence, frontend_confidence=frontend_confidence,
                          oss=oss_contribution, linter=linter_knowledge, ci=ci_knowledge, ci_frameworks=ci_frameworks,
                          tdd=tdd_knowledge, code_review=code_review, languages=programming_proficiencies,

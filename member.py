@@ -1,6 +1,7 @@
 import abc
 from enum import IntFlag
 from typing import Set, List, Dict
+from enums import ProgrammingLanguages as PL
 
 
 class RoleEnums(IntFlag):
@@ -83,8 +84,7 @@ class Member(metaclass=abc.ABCMeta):
     def build_ranking(taxonomy: Dict, languages: Set = Set, frameworks: Set = Set, rids: IntFlag = 0) -> Dict:
         ranking = {'frontend': 0, 'backend': 0, 'languages': set(), 'frameworks': set(), 'rids': rids}
 
-        for l in languages:
-            ranking['languages'].add(l)
+        ranking['languages'].update(languages)
 
         for f in frameworks:
             fw = f if f not in taxonomy['framework_synonyms'] else taxonomy['framework_synonyms'][f]
@@ -92,7 +92,7 @@ class Member(metaclass=abc.ABCMeta):
                 ranking['frontend'] += 1
             else:
                 ranking['backend'] += 1
-            ranking['languages'].add(taxonomy['frameworks'][fw]['language'])
+            ranking['languages'].add(PL(taxonomy['frameworks'][fw]['language']))
             ranking['frameworks'].add(fw)
 
         return ranking
