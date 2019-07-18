@@ -102,9 +102,10 @@ class NaiveHeuristic(Heuristic):
         x = 0
         y = 0
         while x < len(members):
-            while len(self.groups[y]) < self.size and x < len(members):
-                self.groups[y].append(members[x].email)
+            while len(self.groups[y]['members']) < self.size and x < len(members):
+                self.groups[y]['members'].append(members[x].email)
                 x += 1
+            self.groups[y]['expertise'].add("I don't know!?")
             y += 1
 
         return self.to_json()
@@ -194,15 +195,21 @@ class ExperienceHeuristic(Heuristic):
         backward = len(sorted_members)-1
         x = 0
         y = 0
+        total = 0
         while forward != backward and x < len(self.groups):
-            if len(self.groups[x]) < self.size:
-                self.groups[x].append(sorted_members[forward].email)
-                self.groups[x].append(sorted_members[backward].email)
+            if len(self.groups[x]['members']) < self.size:
+                self.groups[x]['members'].append(sorted_members[forward].email)
+                self.groups[x]['members'].append(sorted_members[backward].email)
                 backward -= 1
                 forward += 1
+                total += sorted_members[forward].experience + sorted_members[backward].experience
             else:
+                self.groups[x]['expertise'] = total
                 x += 1
+                total = 0
+
             y += 1
+        self.groups[x]['expertise'] = total
 
         return self.to_json()
 
