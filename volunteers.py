@@ -1,7 +1,7 @@
 import cli
 import csv
 import logging
-from member import Member, Designer, Developer, Leader
+from member import Member, Designer, Developer, Leader, RoleEnums
 from typing import Dict, List, Set
 from enums import ProgrammingLanguages as PL
 from enums import ContinuousIntegration as CI
@@ -14,18 +14,16 @@ class Volunteers(object):
         self.log = logging.getLogger(self.__class__.__name__)
         self.config = config
 
-    def build_volunteers(self) -> List:
+    def build_volunteers(self) -> Dict:
         """
         This parses the input file and builds the members and their roles.
         :return: List of users
         """
-        members = list()
+        volunteers = {'leaders': list(), 'members': list()}
         with open(self.config.input_file, 'r') as csv_file:
             reader = csv.DictReader(csv_file, delimiter=',')
             uid = 1
             for row in reader:
-                if row['Username'] == 'Iyasu.shinsei@gmail.com':
-                    x = 1
                 roles = set()
                 rids = 0
                 frameworks = set()
@@ -52,13 +50,19 @@ class Volunteers(object):
                     rids += role.rid
 
                 if row["I would like to be considered for a team lead role"] == "Yes":
-                    roles.add(Leader(Volunteers.parse_experience(
-                        row["How long have you been managing people/product(s)"])))
-                members.append(Member(uid, row['Username'], portfolios, roles,
-                                      Member.build_ranking(self.config.taxonomy, frameworks=frameworks,
-                                                           languages=languages, rids=rids), experience=experience))
+                    role = Leader(Volunteers.parse_experience(row["How long have you been managing people/product(s)"]))
+                    roles.add(role)
+                    rids += role.rid
+
+                member = Member(uid, row['Username'], portfolios, roles,
+                                Member.build_ranking(self.config.taxonomy, frameworks=frameworks,
+                                                     languages=languages, rids=rids), experience=experience)
+                if rids & RoleEnums.LEADER:
+                    volunteers['leaders'].append(member)
+                else:
+                    volunteers['members'].append(member)
                 uid += 1
-        return members
+        return volunteers
 
     def parse_frameworks(self, js_fw: str) -> Set:
         """

@@ -2,11 +2,8 @@ import abc
 import logging
 from typing import Dict, List
 from enum import IntEnum
-from member import Member
-from member import RoleEnums
 import operator
 import json
-import math
 
 
 class HeuristicEnum(IntEnum):
@@ -58,22 +55,18 @@ class Heuristic(metaclass=abc.ABCMeta):
         self.log.info("Using " + self.heuristic.name)
 
     @abc.abstractmethod
-    def preprocess(self, members: List):
-        # Put the leaders in their own structure.
-        x = 0
-        while x < len(members):
-            if members[x].roles & RoleEnums.LEADER:
-                self.leaders.append(members[x].email)
-                del members[x]
-            x += 1
-
-        # Build the groups required for assignment.
-        for x in range(0, math.ceil(len(members)/self.size)+1):
-            self.groups[x] = {'members': list(), 'leader': None, 'expertise': set()}
+    def preprocess(self, members: Dict):
+        for l in members['leaders']:
+            self.leaders.append(l.email)
+        pass
 
     @abc.abstractmethod
-    def build_groups(self, members: List[Member]) -> str:
+    def build_groups(self, volunteers: Dict) -> str:
         pass
+
+    def add_group(self, x: int):
+        if x not in self.groups:
+            self.groups[x] = {'members': list(), 'leader': None, 'expertise': set()}
 
     @staticmethod
     def set_default(obj):
@@ -93,20 +86,22 @@ class NaiveHeuristic(Heuristic):
     def __init__(self, size: int):
         super().__init__(size, HeuristicEnum.NAIVE)
 
-    def preprocess(self, members: List):
+    def preprocess(self, members: Dict):
         super().preprocess(members)
 
-    def build_groups(self, members: List[Member]) -> str:
-        self.preprocess(members)
+    def build_groups(self, volunteers: Dict) -> str:
+        self.preprocess(volunteers)
 
         x = 0
         y = 0
-        while x < len(members):
-            while len(self.groups[y]['members']) < self.size and x < len(members):
-                self.groups[y]['members'].append(members[x].email)
+        self.add_group(y)
+        while x < len(volunteers['members'])-1:
+            while len(self.groups[y]['members']) < self.size and x < len(volunteers['members']):
+                self.groups[y]['members'].append(volunteers['members'][x].email)
                 x += 1
             self.groups[y]['expertise'].add("I don't know!?")
             y += 1
+            self.add_group(y)
 
         return self.to_json()
 
@@ -118,28 +113,42 @@ class LanguageHeuristic(Heuristic):
     def __init__(self, size: int):
         super().__init__(size, HeuristicEnum.LANGUAGE)
         self.buckets = dict()
+        self.unassigned = set()
 
-    def preprocess(self, members: List):
-        super().preprocess(members)
-        for m in members:
+    def preprocess(self, volunteers: Dict):
+        super().preprocess(volunteers)
+        for m in volunteers['members']:
+            self.unassigned.add(m.email)
             for l in m.ranking['languages']:
                 if l not in self.buckets:
                     self.buckets[l] = set()
                 self.buckets[l].add(m)
 
-    def build_groups(self, members: List[Member]) -> str:
-        self.preprocess(members)
+    def build_groups(self, volunteers: Dict) -> str:
+        self.preprocess(volunteers)
         x = 0
+        self.add_group(x)
         assigned = set()
         for k, v in self.buckets.items():
-            for m in v:
-                if len(self.groups[x]['members']) < self.size:
-                    if m not in assigned and k in m.ranking['languages']:
-                        self.groups[x]['members'].append(m.email)
-                        assigned.add(m)
-                else:
+            for m in volunteers['members']:
+                if m.email not in assigned and k in m.ranking['languages'] and \
+                        len(self.groups[x]['members']) < self.size:
+                    self.groups[x]['members'].append(m.email)
+                    assigned.add(m.email)
+                    self.unassigned.remove(m.email)
+                if len(self.groups[x]['members']) == self.size:
+                    self.groups[x]['expertise'] = k.name
                     x += 1
-                self.groups[x]['expertise'].add(k.name)
+                    self.add_group(x)
+        # Clean up the last few that might exist.
+        # At this point we dont' have a cohesive group,
+        # so we will blindly add them to any group.
+        for u in self.unassigned:
+            if len(self.groups[x]['members']) < self.size:
+                self.groups[x]['members'].append(u)
+            else:
+                x += 1
+                self.add_group(x)
         return self.to_json()
 
 
@@ -150,29 +159,44 @@ class FrameworkHeuristic(Heuristic):
     def __init__(self, size: int):
         super().__init__(size, HeuristicEnum.FRAMEWORK)
         self.buckets = dict()
+        self.unassigned = set()
 
-    def preprocess(self, members: List):
+    def preprocess(self, members: Dict):
         # Build the leaders.
         super().preprocess(members)
-        for m in members:
+        for m in members['members']:
+            self.unassigned.add(m.email)
             for f in m.ranking['frameworks']:
                 if f not in self.buckets:
                     self.buckets[f] = set()
                 self.buckets[f].add(m)
 
-    def build_groups(self, members: List[Member]) -> str:
-        self.preprocess(members)
-        assigned = set()
+    def build_groups(self, volunteers: Dict) -> str:
+        self.preprocess(volunteers)
         x = 0
+        self.add_group(x)
+        assigned = set()
         for k, v in self.buckets.items():
-            for m in v:
-                if len(self.groups[x]['members']) < self.size:
-                    if m not in assigned and k in m.ranking['frameworks']:
-                        self.groups[x]['members'].append(m.email)
-                        assigned.add(m)
-                else:
+            for m in volunteers['members']:
+                if m.email not in assigned and k in m.ranking['frameworks'] and \
+                        len(self.groups[x]['members']) < self.size:
+                    self.groups[x]['members'].append(m.email)
+                    assigned.add(m.email)
+                    self.unassigned.remove(m.email)
+                if len(self.groups[x]['members']) == self.size:
+                    self.groups[x]['expertise'] = k
                     x += 1
-                self.groups[x]['expertise'].add(k)
+                    self.add_group(x)
+        # Clean up the last few that might exist.
+        # At this point we dont' have a cohesive group,
+        # so we will blindly add them to any group.
+        for u in self.unassigned:
+            if len(self.groups[x]['members']) < self.size:
+                self.groups[x]['members'].append(u)
+            else:
+                x += 1
+                self.add_group(x)
+
         return self.to_json()
 
 
@@ -185,18 +209,19 @@ class ExperienceHeuristic(Heuristic):
         super().__init__(size, HeuristicEnum.EXPERIENCE)
         self.buckets = dict()
 
-    def preprocess(self, members: List):
+    def preprocess(self, members: Dict):
         super().preprocess(members)
 
-    def build_groups(self, members: List[Member]) -> str:
-        self.preprocess(members)
-        sorted_members = sorted(members, key=operator.attrgetter('experience'))
+    def build_groups(self, volunteers: Dict) -> str:
+        self.preprocess(volunteers)
+        sorted_members = sorted(volunteers['members'], key=operator.attrgetter('experience'))
         forward = 0
         backward = len(sorted_members)-1
         x = 0
         y = 0
         total = 0
-        while forward != backward and x < len(self.groups):
+        self.add_group(x)
+        while forward != backward:
             if len(self.groups[x]['members']) < self.size:
                 self.groups[x]['members'].append(sorted_members[forward].email)
                 self.groups[x]['members'].append(sorted_members[backward].email)
@@ -207,8 +232,11 @@ class ExperienceHeuristic(Heuristic):
                 self.groups[x]['expertise'] = total
                 x += 1
                 total = 0
+                self.add_group(x)
 
             y += 1
+        # add the last person to the group.
+        self.groups[x]['members'].append(sorted_members[backward].email)
         self.groups[x]['expertise'] = total
 
         return self.to_json()
@@ -221,11 +249,11 @@ class MagicHeuristic(Heuristic):
     def __init__(self, size: int):
         super().__init__(size, HeuristicEnum.MAGIC)
 
-    def preprocess(self, members: List):
+    def preprocess(self, members: Dict):
         super().preprocess(members)
 
-    def build_groups(self, members: List[Member]) -> str:
+    def build_groups(self, volunteers: Dict) -> str:
         self.log.warning("This isn't implemented yet, using " + self.heuristic.NAIVE.name)
         naive = NaiveHeuristic(self.size)
-        naive.build_groups(members)
+        naive.build_groups(volunteers)
         return naive.to_json()
