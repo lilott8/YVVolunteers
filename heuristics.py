@@ -56,6 +56,8 @@ class Heuristic(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def preprocess(self, members: Dict):
+        self.administrative['volunteers'] = len(members['members'])
+        self.administrative['leaders'] = len(members['leaders'])
         for l in members['leaders']:
             self.leaders.append(l.email)
         pass
@@ -221,7 +223,7 @@ class ExperienceHeuristic(Heuristic):
         y = 0
         total = 0
         self.add_group(x)
-        while forward != backward:
+        while forward < backward:
             if len(self.groups[x]['members']) < self.size:
                 self.groups[x]['members'].append(sorted_members[forward].email)
                 self.groups[x]['members'].append(sorted_members[backward].email)
@@ -230,14 +232,15 @@ class ExperienceHeuristic(Heuristic):
                 total += sorted_members[forward].experience + sorted_members[backward].experience
             else:
                 self.groups[x]['expertise'] = total
+                self.groups[x]['size'] = len(self.groups[x]['members'])
                 x += 1
                 total = 0
                 self.add_group(x)
-
             y += 1
         # add the last person to the group.
         self.groups[x]['members'].append(sorted_members[backward].email)
         self.groups[x]['expertise'] = total
+        self.groups[x]['size'] = len(self.groups[x]['members'])
 
         return self.to_json()
 
