@@ -238,7 +238,9 @@ class ExperienceHeuristic(Heuristic):
                 self.add_group(x)
             y += 1
         # add the last person to the group.
-        self.groups[x]['members'].append(sorted_members[backward].email)
+        if len(sorted_members) % 2:
+            self.groups[x]['members'].append(sorted_members[backward].email)
+            total += sorted_members[backward].experience
         self.groups[x]['expertise'] = total
         self.groups[x]['size'] = len(self.groups[x]['members'])
 
